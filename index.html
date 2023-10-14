@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PobreFlix</title>
+    <style>
+        /* Estilos para o modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 9999; /* Defina um valor alto para o z-index */
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: black; /* Fundo preto */
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px; /* Bordas arredondadas */
+        }
+
+        /* Estilos para o botão de download */
+        .download-button, .watch-button {
+            display: inline-block;
+            padding: 70px 120px; /* Tamanho maior */
+            background-color: red; /* Cor do botão vermelho */
+            color: #fff;
+            text-decoration: none;
+            border: none;
+            margin: 20px;
+            border-radius: 10px; /* Bordas arredondadas */
+        }
+
+        /* Estilos para o botão "Assistir Online" */
+        .watch-button {
+            background-color: green; /* Cor do botão verde */
+        }
+
+        /* Estilos para o vídeo incorporado */
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* Proporção de 16:9 para o vídeo */
+            padding-top: 30px;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%; /* Aumente o tamanho do vídeo */
+            height: 100%; /* Aumente o tamanho do vídeo */
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #000;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 36px;
+            margin: 0;
+        }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #e50914;
+            color: #fff;
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            background-color: #ff141a;
+        }
+
+        /* Estilos para as imagens do conteúdo */
+        .movie-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .movie-card {
+            margin: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .movie-card img {
+            width: 300px;
+            height: 450px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+        }
+
+        /* Estilos para as imagens de fundo */
+        .background-images {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .background-images img {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        /* Define uma classe para cada imagem de fundo */
+        .background-1 img {
+            opacity: 0;
+        }
+
+        .background-2 img {
+            opacity: 0;
+        }
+
+        .background-3 img {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Modal para a janela flutuante -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <div class="video-container">
+                <iframe id="trailer" width="800" height="450" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+            <h1><a id="botao-download" class="download-button" href="URL-do-site-de-download" target="_blank">Baixar Filme</a></h1>
+            <h1><a id="botao-online" class="watch-button" href="URL-do-site-de-streaming" target="_blank">Assistir Online</a></h1>
+        </div>
+    </div>
+
+    <header>
+       <h1> <font color="red">P</font>obre<font color="red">F</font>lix</h1>
+        <div class="button-container">
+            <a class="button" href="https://redecanaistv.zip/">Tv ao vivo</a>
+            <a class="button" href="#">Terror</a>
+            <a class= "button" href="#">Comédia</a>
+            <a class="button" href="#">Suspense</a>
+            <a class="button" href="#"><label>Categoria➡️</label></a>
+            <select id="genreDropdown">
+                <option value="">Selecione um gênero</option>
+                <option value="acao">Ação</option>
+                <option value="drama">Drama</option>
+                <option value="comedia">Comédia</option>
+                <option value="suspense">Suspense</option>
+            </select>
+        </div>
+    </header>
+
+    <div class="movie-cards">
+        <div class="movie-card" onmouseenter="changeBackground(1)">
+            <img src="fale-comigo.jpg" width="300" height="450" data-download="magnet:?xt=urn:btih:24bcce4cf3d6c0fd3199cff3eb1c2853ca2ce5d4&dn=Fale.Comigo.2023.1080p.BluRay.DUAL.5.1&tr=udp%3a%2f%2ftracker.openbittorrent.com%3a80%2fannounce&tr=udp%3a%2f%2ftracker.opentrackr.org%3a1337%2fannounce" data-stream="https://rkplayer.com/e/tt10638522#MA==" data-trailer="https://www.youtube.com/embed/3pQzMe4L4yw?si=gFN8jT0bDqkKKEPn" onmouseenter="zoomIn(this)" onmouseleave="zoomOut(this)">
+        </div>
+        <div class="movie-card" onmouseenter="changeBackground(2)">
+            <img src="morte-do-demonio.jpg" width="300" height="450" data-download="magnet:?xt=urn:btih:451f3e80a8599f76575781db6bf9e0a589a12cd2&dn=A%20Morte%20do%20Dem%c3%b4nio%20-%20A%20Ascens%c3%a3o%202023%201080p%20WEB-DL%20DUAL%205.1&tr=udp%3a%2f%2ftracker.openbittorrent.com%3a80%2fannounce&tr=udp%3a%2f%2ftracker.opentrackr.org%3a1337%2fannounce"data-stream="https://rkplayer.com/e/tt13345606#MA==" data-trailer="https://www.youtube.com/embed/5n9v35xgRpw?si=us8UdAIoau67RM78" onmouseenter="zoomIn(this)" onmouseleave="zoomOut(this)">
+        </div>
+        <div class="movie-card" onmouseenter="changeBackground(3)">
+            <img src="A-freira-2.jpg" width="300" height="450" data-download="magnet:?xt=urn:btih:HHNWXM523IK6TFMCFCTPNKH5SJFG2KCW&dn=A%20Freira%202%202023%20WEB-DL%201080p%20x264%20DUAL%205.1&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80%2Fannounce"data-stream="https://rkplayer.com/e/tt10160976#MA==" data-trailer="https://www.youtube.com/embed/KCdhf_lcAks?si=rfF8nNpO5MZV6YG2" onmouseenter="zoomIn(this)" onmouseleave="zoomOut(this)">
+        </div>
+        <div class="movie-card" onmouseenter="changeBackground(4)">
+            <img src="Sobrenatural-a-porta-vermelha.png" width="300" height="450" data-download="magnet:?xt=urn:btih:2d26e49e3e9a46b6ace6f949ac7f5c38cfaf9cdc&dn=Sobrenatural%20-%20A%20Porta%20Vermelha%202023%201080p%20WEB-DL%20DUAL%205.1&tr=udp%3a%2f%2ftracker.openbittorrent.com%3a80%2fannounce&tr=udp%3a%2f%2ftracker.opentrackr.org%3a1337%2fannounce" data-stream="https://rkplayer.com/e/tt13405778#MA==" data-trailer="https://www.youtube.com/embed/Lsrfk3k2b6c?si=d0yuEOb4Us5LdUUh" onmouseenter="zoomIn(this)" onmouseleave="zoomOut(this)">
+        </div>
+        <div class="movie-card" onmouseenter="changeBackground(5)">
+            <img src="O-exorcista-do-papa.jpg" width="300" height="450" data-download="magnet:?xt=urn:btih:f7114d4643db585b2bf7cce7f867e6f6c317e70b&dn=O.Exorcista.do.Papa.2023.1080p.WEB-DL.DDP5.1.H264.DUAL-LAPUMiA.mkv&tr=udp%3a%2f%2fopen.stealth.si%3a80%2fannounce&tr=udp%3a%2f%2ftracker.tiny-vps.com%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.opentrackr.org%3a1337%2fannounce&tr=udp%3a%2f%2ftracker.torrent.eu.org%3a451%2fannounce&tr=udp%3a%2f%2fexplodie.org%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.cyberia.is%3a6969%2fannounce&tr=udp%3a%2f%2fipv4.tracker.harry.lu%3a80%2fannounce&tr=udp%3a%2f%2fp4p.arenabg.com%3a1337%2fannounce&tr=udp%3a%2f%2ftracker.birkenwald.de%3a6969%2fannounce&tr=udp%3a%2f%2ftracker.moeking.me%3a6969%2fannounce&tr=udp%3a%2f%2fopentor.org%3a2710%2fannounce&tr=udp%3a%2f%2ftracker.dler.org%3a6969%2fannounce&tr=udp%3a%2f%2f9.rarbg.me%3a2970%2fannounce&tr=https%3a%2f%2ftracker.foreverpirates.co%3a443%2fannounce&tr=http%3a%2f%2fvps02.net.orel.ru%3a80%2fannounce"  data-stream="https://rkplayer.com/e/tt13375076#MA==" data-trailer="https://www.youtube.com/embed/NT7d8sWLVCM?si=nic9ZwDAUtAv4GpN" onmouseenter="zoomIn(this)" onmouseleave="zoomOut(this)">
+        </div>
+        <div class="movie-card" onmouseenter="changeBackground(6)">
+            <img src="pear.jpg" width="300" height="450" data-download="magnet:?xt=urn:btih:005b8cb33b7488771605dbf5724cf1f24db50c66&dn=Pearl%20-%20Uma%20Hist%c3%b3ria%20de%20Origem%20%27X%27%202022%201080p%20BluRay%20DUAL%205.1&tr=udp%3a%2f%2ftracker.openbittorrent.com%3a80%2fannounce&tr=udp%3a%2f%2ftracker.opentrackr.org%3a1337%2fannounce" data-stream="https://rkplayer.com/e/tt18925334#MA==" data-trailer="https://www.youtube.com/embed/7MRcuN9_Pfo?si=A8b01uHunQwUyn74" onmouseenter="zoomIn(this)" onmouseleave="zoomOut(this)">
+        </div>
+        <div class="movie-card" onmouseenter="changeBackground(7)">
+            <img src="panico-6.jpg" width="300" height="450" data-download="magnet:?xt=urn:btih:ac447b276544a1a8b6545b8b68bd53e6ca0ca712&dn=P%c3%a2nico%20VI%202023%201080p%20WEB-DL%20DUAL%205.1&tr=udp%3a%2f%2ftracker.openbittorrent.com%3a80%2fannounce&tr=udp%3a%2f%2ftracker.opentrackr.org%3a1337%2fannounce" data-stream="https://rkplayer.com/e/tt17663992#MA==" data-trailer="https://www.youtube.com/embed/F4LhySFaOMo?si=yAkkuRGbCYDmov7K" onmouseenter="zoomIn(this)" onmouseleave="zoomOut(this)">
+        </div>
+        <div class="movie-card" onmouseenter="changeBackground(8)">
+            <img src="Dracula-a-ultima-viagem-do-demeter.png" width="300" height="450" data-download="magnet:?xt=urn:btih:eb9680316e37c25041e168a74deb98f431d3c77e&dn=Dr%c3%a1cula%20-%20A%20%c3%9altima%20Viagem%20do%20Dem%c3%a9ter%202023%201080p%20WEB-DL%20DUAL%205.1&tr=udp%3a%2f%2ftracker.openbittorrent.com%3a80%2fannounce&tr=udp%3a%2f%2ftracker.opentrackr.org%3a1337%2fannounce" data-stream="https://rkplayer.com/e/tt1001520#MA==" data-trailer="https://www.youtube.com/embed/FwgF3-3LYsg?si=y9XABYsL97-HjlNi" onmouseenter="zoomIn(this)" onmouseleave="zoomOut(this)">
+        </div>
+    </div>
+
+    <!-- Imagens de fundo -->
+    <div class="background-images">
+        <div class="background-1">
+            <img src="wall1.jpg" alt="Background 1">
+        </div>
+        <div class="background-2">
+            <img src="wall2.jpg" alt="Background 2">
+        </div>
+        <div class="background-3">
+            <img src="wall3.jpg" alt="Background 3">
+        </div>
+        <!-- Adicione mais divs de fundo, se necessário -->
+    </div>
+
+    <script>
+        // Função para trocar as imagens de fundo
+        let currentBackground = 1
+
+
+
+        function changeBackground(nextBackground) {
+            if (nextBackground !== currentBackground) {
+                document.querySelector(`.background-${currentBackground} img`).style.opacity = 0;
+                document.querySelector(`.background-${nextBackground} img`).style.opacity = 0;
+                currentBackground = nextBackground;
+            }
+        }
+
+        // Funções para zoom nas imagens
+        function zoomIn(imagem) {
+            imagem.style.transform = "scale(1.05)";
+        }
+
+        function zoomOut(imagem) {
+            imagem.style.transform = "scale(1)";
+        }
+
+        // Adicionando o evento de clique na imagem
+        const imagens = document.querySelectorAll('.movie-card img');
+        const modal = document.getElementById("myModal");
+        const trailer = document.getElementById("trailer");
+        const botaoDownload = document.getElementById("botao-download");
+        const botaoOnline = document.getElementById("botao-online");
+
+        imagens.forEach(function(imagem, index) {
+            imagem.addEventListener("click", function() {
+                const trailerURL = this.getAttribute('data-trailer');
+                const downloadURL = this.getAttribute('data-download');
+                const streamURL = this.getAttribute('data-stream');
+                trailer.src = trailerURL;
+                botaoDownload.href = downloadURL;
+                botaoOnline.href = streamURL;
+                modal.style.display = "block";
+                changeBackground(index + 1);
+            });
+        });
+
+        // Fechar o modal ao clicar fora dele
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+                trailer.src = "";
+            }
+        }
+
+        // Filtrar filmes por gênero
+        const genreDropdown = document.getElementById("genreDropdown");
+        const movieCards = document.querySelectorAll(".movie-card");
+
+        genreDropdown.addEventListener("change", function() {
+            const selectedGenre = genreDropdown.value;
+
+            if (selectedGenre === "") {
+                movieCards.forEach(function(card) {
+                    card.style.display = "block";
+                });
+            } else {
+                movieCards.forEach(function(card) {
+                    const cardGenre = card.getAttribute("data-genre");
+                    if (cardGenre === selectedGenre) {
+                        card.style.display = "block";
+                    } else {
+                        card.style.display = "none";
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
